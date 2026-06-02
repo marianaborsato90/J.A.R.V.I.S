@@ -3,6 +3,8 @@ using Jarvis.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -28,6 +30,7 @@ services.AddLogging(logging =>
 
 services.AddSingleton<IConfiguration>(configuration);
 services.AddSingleton<ICommandService, CommandService>();
+services.AddSingleton<IApplicationLauncher, ApplicationLauncher>();
 
 var serviceProvider = services.BuildServiceProvider();
 
@@ -36,6 +39,7 @@ var serviceProvider = services.BuildServiceProvider();
 // ─────────────────────────────────────────
 
 var commandService = serviceProvider.GetRequiredService<ICommandService>();
+var applicationLauncher = serviceProvider.GetRequiredService<IApplicationLauncher>();
 var jarvisConfig   = configuration.GetSection("Jarvis");
 
 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -70,4 +74,13 @@ while (true)
 
     // Delega o comando ao serviço
     commandService.Execute(input);
+}
+
+partial class Program 
+{
+    static void Main() 
+    {
+     Process.Start("notepad.exe");
+
+    }
 }
